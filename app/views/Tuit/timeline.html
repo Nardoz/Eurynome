@@ -1,0 +1,35 @@
+<h1>Timeline of: ${screenName}</h1>
+
+
+<table border="1" cellpadding="5" cellspacing="0">
+<tr>
+	<td>
+		${timeline.size()}
+		<br />
+		#{list items:timeline, as:'s' }
+		<div>
+			<div>${s.getText()}</div>
+			<div>${s.getCreatedAt()}</div>
+			<div>${s.getUser().getName()}</div>
+		</div>
+		<hr />
+		#{/list}
+	</td>
+	<td>
+		${mentions.size()}
+		<br />
+		#{list items:mentions, as:'s' }
+		<div>
+			<div>${s.getText()}</div>
+			<div>${s.getCreatedAt()}</div>
+			<div>${s.getUser().getName()}</div>
+		</div>
+		<hr />
+		#{/list}
+	</td>
+</tr>
+</table>
+
+
+
+
