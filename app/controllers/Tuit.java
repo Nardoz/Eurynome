@@ -60,7 +60,7 @@ public class Tuit extends Controller {
 			ResponseList<Status> mentions = twitter.getMentions(paging);
 
 			renderArgs.put("screenName", user.screenName);
-			render(timeline);
+			render(mentions, timeline);
 
 		} catch (TwitterException e) {
 			Logger.error(e, e.toString(), "");
