@@ -1,10 +1,13 @@
 package controllers;
 
+import java.util.List;
+
 import models.User;
 import play.Logger;
 import play.Play;
 import play.data.validation.Required;
 import play.data.validation.Valid;
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Router;
 import play.mvc.results.Redirect;
@@ -21,23 +24,35 @@ import twitter4j.http.AccessToken;
 import twitter4j.http.RequestToken;
 
 public class Tuit extends Controller {
+	
+	private static boolean loggedin = session.get("loggedin").equals(1) ? true : false;
 
-	public static void index() {
-
-		render();
+	@Before(unless="callback,signin")
+	public static void checkSession() {
+		if(!session.get("loggedin").equals(1)) {
+			redirect("Tuit.index");
+		}
+	}
+	
+	public static void index() { 
+		List<User> users = User.findAll();
+		render(loggedin, users);
 	}
 
 	public static void postDM(Long id, String screenName, String text) {
+		
 		User user = User.findById(id);
-		if (user == null)
+		
+		if(user == null) {
 			error("User.id not found: " + id);
-
+		}
+		
 		Twitter twitter = TwitterConnect.factory(user);
 
 		try {
 			DirectMessage sendDirectMessage = twitter.sendDirectMessage(screenName, text);
 			flash.put("message", sendDirectMessage.getId());
-			redirect("Tuit.index", sendDirectMessage.getId());
+			redirect("Tuit.timeline", id);
 
 		} catch (TwitterException e) {
 			Logger.error(e.getMessage());
@@ -46,10 +61,13 @@ public class Tuit extends Controller {
 	}
 
 	public static void timeline(Long id) {
+		
 		User user = User.findById(id);
-		if (user == null)
+		
+		if(user == null) {
 			error("User.id not found: " + id);
-
+		}
+			
 		Twitter twitter = TwitterConnect.factory(user);
 
 		try {
@@ -59,8 +77,7 @@ public class Tuit extends Controller {
 			ResponseList<Status> timeline = twitter.getUserTimeline(paging);
 			ResponseList<Status> mentions = twitter.getMentions(paging);
 
-			renderArgs.put("screenName", user.screenName);
-			render(mentions, timeline);
+			render(user, mentions, timeline);
 
 		} catch (TwitterException e) {
 			Logger.error(e, e.toString(), "");
@@ -74,6 +91,7 @@ public class Tuit extends Controller {
 
 			session.put("requestToken_token", requestToken.getToken());
 			session.put("requestToken_secret", requestToken.getTokenSecret());
+			session.put("loggedin", 1);
 
 			redirect(requestToken.getAuthenticationURL());
 
@@ -86,10 +104,15 @@ public class Tuit extends Controller {
 
 	public static void callback(String oauth_token, String oauth_verifier) {
 		Long id = -1L;
+		
 		try {
 			Twitter twitter = TwitterConnect.factory();
-			AccessToken accessToken = twitter.getOAuthAccessToken(session.get("requestToken_token"), session.get("requestToken_secret"),
-				oauth_verifier);
+			
+			AccessToken accessToken = twitter.getOAuthAccessToken(
+				session.get("requestToken_token"), 
+				session.get("requestToken_secret"), 
+				oauth_verifier
+			);
 
 			String screenName = accessToken.getScreenName();
 			User user = new User(screenName, accessToken.getToken(), accessToken.getTokenSecret());
@@ -100,10 +123,8 @@ public class Tuit extends Controller {
 
 		} catch (TwitterException e) {
 			Logger.error(e, "");
-
 		}
+		
 		redirect("Tuit.timeline", id);
-
 	}
-
 }
