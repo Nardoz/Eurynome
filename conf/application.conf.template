@@ -197,4 +197,3 @@ mail.smtp=mock
 # Twitter Credentials
 twitter.consumerKey=XXXXXXXXXXXXXXXXXXXXXXX
 twitter.consumerSecret=XXXXXXXXXXXXXXXXXXXXXXX
-
