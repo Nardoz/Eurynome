@@ -1,20 +1,8 @@
 #{extends 'main.html' /}
-#{set title:'Index' /}
+#{set title:'Home' /}
 
-<a href="@{Tuit.signin()}">Sigin in Twitter</a>
-<br />
-<br />
-<a href="@{Tuit.timeline(1)}">My Profile in Twitter</a>
-<br />
-<br />
-<br />
-#{form @Tuit.postDM()}
-	MyID: <input type="text" id="id" name="id" size="2" />
-	<br />
-	To: <input type="text" id="screenName" name="screenName" />
-	<br />
-	Text: <input type="text" id="text" name="text" size="20" height="20" /> 	
-	<br />
-	<br />
-	<input type="submit" value="DM it!" />
-#{/form}
+<ul id="userList">
+	#{list items:users, as:'user'}
+	    <li><a href="@{Tuit.timeline(user.id)}">${user.screenName}</a>
+	#{/list}
+</ul>
