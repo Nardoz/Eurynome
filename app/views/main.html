@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
     <head>
         <title>#{get 'title' /}</title>
@@ -11,6 +10,17 @@
         #{get 'moreScripts' /}
     </head>
     <body>
-        #{doLayout /}
+        <div id="container">        
+            <div id="header">
+                <ul id="nav">
+	                <li#{if get 'title' == 'Home'} class="selected"{/if}>Home</li>
+	                <li#{if get 'title' == 'My Timeline'} class="selected"{/if}><a href="@{Tuit.timeline(session.get("userId")))}">My Timeline</a></li>
+	            </ul>
+	            #{if loggedin}
+	                <a class="signin" href="@{Tuit.signin()}"><img src="http://si0.twimg.com/images/dev/buttons/sign-in-with-twitter-l.png" alt="" /></a>
+	            #{/if}
+            </div>            
+            #{doLayout /}
+        </div>        
     </body>
 </html>
