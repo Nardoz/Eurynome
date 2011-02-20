@@ -3,13 +3,8 @@
 # ~~~~
 
 # Home page
-GET     /                                       Application.index
-
-# Import CRUD routes
-*      /admin              module:crud
-
-# Map static resources from the /app/public folder to the /public path
+*       /                                       Tuit.index
+*       /admin                                  module:crud
+*       /{controller}                           {controller}.index
 GET     /public/                                staticDir:public
-
-# Catch all
 *       /{controller}/{action}                  {controller}.{action}
