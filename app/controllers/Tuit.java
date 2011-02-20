@@ -30,7 +30,7 @@ public class Tuit extends Controller {
 	@Before(unless="callback,signin")
 	public static void checkSession() {
 		if(!session.get("loggedin").equals(1)) {
-			redirect("Tuit.index");
+			//redirect("Tuit.index");
 		}
 	}
 	
