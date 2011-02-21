@@ -3,27 +3,30 @@
 
 <h1>${user.screenName}'s Timeline</h1>
 
-<ul class="tweets">
-    <li class="title">Timeline</li>
-    #{list items:timeline, as:'tweet' }
-	    <li>
-			<span class="username">${tweet.getUser().getName()} (${tweet.getUser().getScreenName()})</span>
-			<span class="tweet">${tweet.getText()}</span>
-			<span class="date">${tweet.getCreatedAt()}</span>  
-	    </li>
-    #{/list}
-</ul>
+<div class="tweets">
+    <h3>My Tweets</h3>
+    <ul>	    
+	    #{list items:timeline, as:'tweet' }
+		    <li class="${tweet_parity}">
+				<span class="tweet">${tweet.getText()}</span>
+				<span class="date">${tweet.getCreatedAt().format('HH:mm dd/MM/yyyy')}</span>  
+		    </li>
+	    #{/list}
+    </ul>
+</div>
 
-<ul class="tweets">
-    <li class="title">Mentions</li>
-    #{list items:mentions, as:'tweet' }
-        <li>
-            <span class="username">${tweet.getUser().getName()} (${tweet.getUser().getScreenName()})</span>
-            <span class="tweet">${tweet.getText()}</span>
-            <span class="date">${tweet.getCreatedAt()}</span>  
-        </li>
-    #{/list}
-</ul>
+<div class="tweets">
+    <h3>Mentions</h3>
+    <ul>
+        #{list items:mentions, as:'tweet' }
+	        <li class="${tweet_parity}">
+	            <span class="username">${tweet.getUser().getName()} (${tweet.getUser().getScreenName()})</span>
+	            <span class="tweet">${tweet.getText()}</span>
+	            <span class="date">${tweet.getCreatedAt().format('HH:mm dd/MM/yyyy')}</span>  
+	        </li>
+	    #{/list}
+    </ul>
+</div>
 
 
 
