@@ -27,14 +27,17 @@ public class Tuit extends Controller {
 	
 	private static boolean loggedin = false;
 
-	@Before(unless="callback,signin")
+	@Before(unless={"callback", "signin"})
 	public static void checkSession() {
 		if(session.get("loggedin") != null && session.get("loggedin").equals(1)) {
 			loggedin = true;
-		}
-				
+		} 
+	}
+	
+	@Before(unless="index")
+	public static void checkSessionAndRedirect() {
 		if(!loggedin) {
-			//redirect("Tuit.index");
+			redirect("Tuit.index");
 		}
 	}
 	
@@ -119,10 +122,17 @@ public class Tuit extends Controller {
 			);
 
 			String screenName = accessToken.getScreenName();
-			User user = new User(screenName, accessToken.getToken(), accessToken.getTokenSecret());
-			user.save();
-
-			id = user.id;
+			
+			User existingUser = User.find("byScreenName", screenName).first();
+			
+			if(!existingUser) {
+				User user = new User(screenName, accessToken.getToken(), accessToken.getTokenSecret());
+				user.save();
+				id = user.id;
+			} else {
+				id = existingUser.id;
+			}
+			
 			session.put("userId", id);
 
 		} catch (TwitterException e) {
