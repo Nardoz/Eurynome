@@ -30,14 +30,14 @@ public class Tuit extends Controller {
 	@Before(unless={"callback", "signin"})
 	public static void checkSession() {
 		
-		if(session.get("loggedin") != null && session.get("loggedin").equals(1)) {
+		if(session.get("loggedin") != null) {
 			loggedin = true;
 		} 
 		
 		renderArgs.put("loggedin", loggedin);
 	}
 	
-	@Before(unless="index")
+	@Before(unless={"index", "callback", "signin"})
 	public static void checkSessionAndRedirect() {
 		if(!loggedin) {
 			redirect("Tuit.index");
