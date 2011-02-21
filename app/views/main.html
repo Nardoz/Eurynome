@@ -27,6 +27,7 @@
             </div>  
             <div id="dm">
 	            #{form @Tuit.postDM()}
+	                <p>From: <strong>${screenName}</strong></p>
 	                <p><label for="screenName">To:</label> <input type="text" id="screenName" name="screenName" /></p>
 	                <p><textarea id="text" name="text" rows="4" cols="30"></textarea></p>    
 	                <p><input type="submit" value="DM it!" /> or <a href="javascript:;" class="sendDM">Cancel</a></p>
