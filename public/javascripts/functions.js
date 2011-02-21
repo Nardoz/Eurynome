@@ -17,5 +17,5 @@ $(window).resize(function() {
 });
 
 function resize() {
-	$('.tweets').height($(window).height() - 200);
+	$('.tweets ul').height($(window).height() - 200);
 }
