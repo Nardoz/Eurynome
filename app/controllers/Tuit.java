@@ -25,11 +25,13 @@ import twitter4j.http.RequestToken;
 
 public class Tuit extends Controller {
 	
-	private static boolean loggedin;
+	private static boolean loggedin = false;
 
 	@Before(unless="callback,signin")
 	public static void checkSession() {
-		loggedin = session.get("loggedin").equals(1) ? true : false;
+		if(session.get("loggedin") != null && session.get("loggedin").equals(1)) {
+			loggedin = true;
+		}
 				
 		if(!loggedin) {
 			//redirect("Tuit.index");
