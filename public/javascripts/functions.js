@@ -9,9 +9,13 @@ $(function() {
 		}
 	});	
 	
-	$('.tweets').height($(window).height() - 200);
-	
-	$(window).resize(function() {
-		$('.tweets').height($(window).height() - 200);
-	});
+	resize();
 });
+
+$(window).resize(function() {
+	resize();
+});
+
+function resize() {
+	$('.tweets').height($(window).height() - 200);
+}
