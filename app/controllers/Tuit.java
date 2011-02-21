@@ -125,7 +125,7 @@ public class Tuit extends Controller {
 			
 			User existingUser = User.find("byScreenName", screenName).first();
 			
-			if(!existingUser) {
+			if(existingUser == null) {
 				User user = new User(screenName, accessToken.getToken(), accessToken.getTokenSecret());
 				user.save();
 				id = user.id;
