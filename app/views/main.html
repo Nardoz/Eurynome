@@ -13,10 +13,12 @@
         <div id="container">        
             <div id="header">
                 <ul id="nav">
-	                <li#{if get 'title' == 'Home'} class="selected"{/if}>Home</li>
-	                <li#{if get 'title' == 'My Timeline'} class="selected"{/if}><a href="@{Tuit.timeline(session.get("userId")))}">My Timeline</a></li>
+	                <li><a href="@{Tuit.index()}">Home</a></li>
+	                #{if loggedin}
+	                   <li><a href="@{Tuit.timeline(session.get("userId"))}">My Timeline</a></li>
+                    #{/if}
 	            </ul>
-	            #{if loggedin}
+	            #{if !loggedin}
 	                <a class="signin" href="@{Tuit.signin()}"><img src="http://si0.twimg.com/images/dev/buttons/sign-in-with-twitter-l.png" alt="" /></a>
 	            #{/if}
             </div>            
