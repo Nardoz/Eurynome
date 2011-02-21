@@ -39,10 +39,16 @@ public class Tuit extends Controller {
 		}
 	}
 	
-	public static void index() { 
-		String userId = session.get("userId");
+	public static void index() { 	
+
+		User user = User.findById(Long.parseLong(session.get("userId")));
+		
+		Long userId = user.id;
+		String screenName = user.screenName;
+		
 		List users = User.findAll();
-		render(userId, users);
+		
+		render(userId, screenName, users);
 	}
 
 	public static void postDM(Long id, String screenName, String text) {
@@ -70,6 +76,7 @@ public class Tuit extends Controller {
 		
 		Long userId = id;
 		User user = User.findById(id);
+		String screenName = user.screenName;
 		
 		if(user == null) {
 			error("User.id not found: " + id);
@@ -84,7 +91,7 @@ public class Tuit extends Controller {
 			ResponseList<Status> timeline = twitter.getUserTimeline(paging);
 			ResponseList<Status> mentions = twitter.getMentions(paging);
 
-			render(userId, user, mentions, timeline);
+			render(userId, screenName, user, mentions, timeline);
 
 		} catch (TwitterException e) {
 			Logger.error(e, e.toString(), "");
