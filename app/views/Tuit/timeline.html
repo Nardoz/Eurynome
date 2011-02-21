@@ -1,43 +1,29 @@
+#{extends 'main.html' /}
+#{set title:'Timeline' /}
+
 <h1>${user.screenName}'s Timeline</h1>
 
-#{form @Tuit.postDM()}
-    <p><label for="screenName">To:</label> <input type="text" id="screenName" name="screenName" /></p>
-    <p><label for="text">Text:</label> <input type="text" id="text" name="text" size="20" height="20" /></p>    
-    <p><input type="submit" value="DM it!" /></p>
-    <input type="hidden" name="id" value="${user.id}" />
-#{/form}
+<ul class="tweets">
+    <li class="title">Timeline</li>
+    #{list items:timeline, as:'tweet' }
+	    <li>
+			<span class="username">${tweet.getUser().getName()} (${tweet.getUser().getScreenName()})</span>
+			<span class="tweet">${tweet.getText()}</span>
+			<span class="date">${tweet.getCreatedAt()}</span>  
+	    </li>
+    #{/list}
+</ul>
 
-<hr />
-
-<table border="1" cellpadding="5" cellspacing="0">
-<tr>
-	<td>
-		${timeline.size()}
-		<br />
-		#{list items:timeline, as:'tweet' }
-			<div>
-				<div>${tweet.getText()}</div>
-				<div>${tweet.getCreatedAt()}</div>
-				<div>${tweet.getUser().getName()}</div>
-			</div>
-			<hr />
-		#{/list}
-	</td>
-	<td>
-		${mentions.size()}
-		<br />
-		#{list items:mentions, as:'tweet' }
-			<div>
-				<div>${tweet.getText()}</div>
-				<div>${tweet.getCreatedAt()}</div>
-				<div>${tweet.getUser().getName()}</div>
-			</div>
-			<hr />
-		#{/list}
-	</td>
-</tr>
-</table>
-
+<ul class="tweets">
+    <li class="title">Mentions</li>
+    #{list items:mentions, as:'tweet' }
+        <li>
+            <span class="username">${tweet.getUser().getName()} (${tweet.getUser().getScreenName()})</span>
+            <span class="tweet">${tweet.getText()}</span>
+            <span class="date">${tweet.getCreatedAt()}</span>  
+        </li>
+    #{/list}
+</ul>
 
 
 
