@@ -30,7 +30,7 @@ public class Tuit extends Controller {
 	@Before(unless={"callback", "signin"})
 	public static void checkSession() {
 		
-		if(session.get("loggedin") != null) {
+		if(session.get("loggedin") != null && session.get("loggedin").equals("1")) {
 			loggedin = true;
 		} 
 		
