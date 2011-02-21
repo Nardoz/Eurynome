@@ -25,28 +25,24 @@ import twitter4j.http.RequestToken;
 
 public class Tuit extends Controller {
 	
-	private static boolean loggedin = false;
-
+	private static boolean signedin;
+	
 	@Before(unless={"callback", "signin"})
-	public static void checkSession() {
-		
-		if(session.get("loggedin") != null && session.get("loggedin").equals("1")) {
-			loggedin = true;
-		} 
-		
-		renderArgs.put("loggedin", loggedin);
+	public static void addToView() {
+		renderArgs.put("signedin", signedin);
 	}
 	
 	@Before(unless={"index", "callback", "signin"})
 	public static void checkSessionAndRedirect() {
-		if(!loggedin) {
+		if(!signedin) {
 			redirect("Tuit.index");
 		}
 	}
 	
 	public static void index() { 
+		String userId = session.get("userId");
 		List users = User.findAll();
-		render(users);
+		render(userId, users);
 	}
 
 	public static void postDM(Long id, String screenName, String text) {
@@ -72,6 +68,7 @@ public class Tuit extends Controller {
 
 	public static void timeline(Long id) {
 		
+		Long userId = id;
 		User user = User.findById(id);
 		
 		if(user == null) {
@@ -87,7 +84,7 @@ public class Tuit extends Controller {
 			ResponseList<Status> timeline = twitter.getUserTimeline(paging);
 			ResponseList<Status> mentions = twitter.getMentions(paging);
 
-			render(user, mentions, timeline);
+			render(userId, user, mentions, timeline);
 
 		} catch (TwitterException e) {
 			Logger.error(e, e.toString(), "");
@@ -101,8 +98,7 @@ public class Tuit extends Controller {
 
 			session.put("requestToken_token", requestToken.getToken());
 			session.put("requestToken_secret", requestToken.getTokenSecret());
-			session.put("loggedin", 1);
-
+			
 			redirect(requestToken.getAuthenticationURL());
 
 		} catch (TwitterException e) {
@@ -110,6 +106,12 @@ public class Tuit extends Controller {
 			error(e.getMessage());
 
 		}
+	}
+	
+	public static void signout() {
+		signedin = false;
+		session.clear();
+		redirect("Tuit.index");
 	}
 
 	public static void callback(String oauth_token, String oauth_verifier) {
@@ -136,12 +138,13 @@ public class Tuit extends Controller {
 				id = existingUser.id;
 			}
 			
+			signedin = true;
 			session.put("userId", id);
 
 		} catch (TwitterException e) {
 			Logger.error(e, "");
 		}
 		
-		redirect("Tuit.timeline", id);
+		redirect("Tuit.index");
 	}
 }
