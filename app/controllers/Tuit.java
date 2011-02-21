@@ -40,15 +40,17 @@ public class Tuit extends Controller {
 	}
 	
 	public static void index() { 	
-
-		User user = User.findById(Long.parseLong(session.get("userId")));
 		
-		Long userId = user.id;
-		String screenName = user.screenName;
-		
-		List users = User.findAll();
-		
-		render(userId, screenName, users);
+		if(session.get("userId") != null) {
+			List users = User.findAll();
+			User user = User.findById(Long.parseLong(session.get("userId")));
+			Long userId = user.id;
+			String screenName = user.screenName;
+			
+			render(userId, screenName, users);
+		} else {
+			render();
+		}
 	}
 
 	public static void postDM(Long id, String screenName, String text) {
