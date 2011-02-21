@@ -1,5 +1,5 @@
 * { margin:0; padding:0 }
-body { font-family:Tahoma; font-size:62.5%; background:#F7F7F7; overflow-x:hidden }
+body { font-family:Tahoma; font-size:62.5%; background:#F7F7F7; overflow:hidden }
 
 a { color:#3B5998 }
 a:hover { text-decoration:none }
@@ -26,9 +26,11 @@ ul li { float:left; margin:0 10px; list-style:none }
 
 #dm { clear:left; width:100%; display:none; border-bottom:1px solid #CCC; padding:10px; background:#FFF }
 
-.tweets { width:47%; height:50%; overflow-y:scroll; float:left; clear:none; padding:1px; margin:0 1%; border:1px solid #CCC; -webkit-border-radius:5px; -moz-border-radius:5px }
-.tweets li { clear:left; margin:5px 0 }
-.tweets li.title { font-weight:bold; font-size:1.5em; margin-bottom:10px }
+.tweets { width:47%; float:left; clear:none; padding:1px; margin:0 1%; border:1px solid #CCC; -webkit-border-radius:5px; -moz-border-radius:5px }
+.tweets h3 { font-weight:bold; font-size:1.5em; margin-bottom:10px; border:none }
+.tweets ul { width:100%; overflow-y:scroll; overflow-x:hidden } 
+.tweets li { clear:left; padding:5px 0 5px 0; border-bottom:1px solid #EEE; width:100% }
+.tweets li.even { background:#EBEFF9 }
 .tweets li span { display:block } 
 .tweets li .username { font-weight:bold }
 .tweets li .tweet {  }
