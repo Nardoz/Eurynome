@@ -38,6 +38,6 @@ public class Utils extends Controller {
     }
     
     public static void tolocal(String oauth_token, String oauth_verifier) {
-    	redirect("http://localhost:8080/tuit/callback/?oauth_token=" + oauth_token + "&oauth_verifier=" + oauth_verifier);
+    	redirect("http://localhost:8080/tuit/callback?oauth_token=" + oauth_token + "&oauth_verifier=" + oauth_verifier);
     }
 }
