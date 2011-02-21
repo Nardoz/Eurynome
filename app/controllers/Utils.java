@@ -36,4 +36,8 @@ public class Utils extends Controller {
 		
 		renderText(response);
     }
+    
+    public static void tolocal(String oauth_token, String oauth_verifier) {
+    	redirect("http://localhost:8080", oauth_token, oauth_verifier);
+    }
 }
