@@ -29,9 +29,12 @@ public class Tuit extends Controller {
 
 	@Before(unless={"callback", "signin"})
 	public static void checkSession() {
+		
 		if(session.get("loggedin") != null && session.get("loggedin").equals(1)) {
 			loggedin = true;
 		} 
+		
+		renderArgs.put("loggedin", loggedin);
 	}
 	
 	@Before(unless="index")
@@ -43,7 +46,7 @@ public class Tuit extends Controller {
 	
 	public static void index() { 
 		List users = User.findAll();
-		render(loggedin, users);
+		render(users);
 	}
 
 	public static void postDM(Long id, String screenName, String text) {
