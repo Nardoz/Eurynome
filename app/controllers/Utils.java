@@ -20,7 +20,8 @@ public class Utils extends Controller {
     	try {
     		String line;    		
     		
-    		Process proc = r.exec("git pull");    	
+    		r.exec("git checkout -f");    	
+    		Process proc = r.exec("git pull");  
     		BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			
     		while((line = input.readLine()) != null) {
