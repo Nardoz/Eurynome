@@ -1,6 +1,7 @@
 package services;
 
 import play.Play;
+import play.mvc.Router;
 import models.User;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -30,10 +31,10 @@ public class TwitterConnect {
 		return twitter;
 	}
 
-	public static RequestToken getRequestToken() throws TwitterException {
+	public static RequestToken getRequestToken(String callbackUrl) throws TwitterException {
 		Twitter twitter = factory();
 
-		RequestToken requestToken = twitter.getOAuthRequestToken();
+		RequestToken requestToken = twitter.getOAuthRequestToken(callbackUrl);
 		return requestToken;
 	}
 

@@ -103,7 +103,8 @@ public class Tuit extends Controller {
 
 	public static void signin() {
 		try {
-			RequestToken requestToken = TwitterConnect.getRequestToken();
+			String callbackUrl = Router.getFullUrl("Tuit.callback");
+			RequestToken requestToken = TwitterConnect.getRequestToken(callbackUrl);
 
 			session.put("requestToken_token", requestToken.getToken());
 			session.put("requestToken_secret", requestToken.getTokenSecret());
