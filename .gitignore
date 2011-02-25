@@ -1,5 +1,7 @@
+.classpath
+.project
 conf/application.conf
 db/*
-eclipse/.settings/*
-eclipse/classes/*
+eclipse/*
 tmp/*
+logs/*
