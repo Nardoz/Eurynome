@@ -79,11 +79,7 @@ public class Tuit extends Controller {
 		Long userId = id;
 		User user = User.findById(id);
 		String screenName = user.screenName;
-		
-		if(user == null) {
-			error("User.id not found: " + id);
-		}
-			
+				
 		Twitter twitter = TwitterConnect.factory(user);
 
 		try {
