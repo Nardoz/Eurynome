@@ -1,8 +1,7 @@
 package services;
 
 import play.Play;
-import play.mvc.Router;
-import models.User;
+import models.Account;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -13,7 +12,7 @@ public class TwitterConnect {
 	private final static String CONSUMER_KEY = Play.configuration.getProperty("twitter.consumerKey");
 	private final static String CONSUMER_SECRET = Play.configuration.getProperty("twitter.consumerSecret");
 
-	public static Twitter factory(User user) {
+	public static Twitter factory(Account user) {
 		ConfigurationBuilder conf = new ConfigurationBuilder();
 		conf.setOAuthConsumerKey(CONSUMER_KEY).setOAuthConsumerSecret(CONSUMER_SECRET).setOAuthAccessToken(user.token)
 			.setOAuthAccessTokenSecret(user.tokenSecret);
@@ -31,10 +30,10 @@ public class TwitterConnect {
 		return twitter;
 	}
 
-	public static RequestToken getRequestToken(String callbackUrl) throws TwitterException {
+	public static RequestToken getRequestToken(String callback) throws TwitterException {
 		Twitter twitter = factory();
 
-		RequestToken requestToken = twitter.getOAuthRequestToken(callbackUrl);
+		RequestToken requestToken = twitter.getOAuthRequestToken(callback);
 		return requestToken;
 	}
 

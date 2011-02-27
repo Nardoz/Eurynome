@@ -4,8 +4,8 @@
 #{if signedin}
     <h2>User List</h2>
 	<ul id="userList">
-		#{list items:users, as:'user'}
-		    <li><a href="@{Tuit.timeline(user.id)}">@${user.screenName}</a>
+		#{list items:accounts, as:'account'}
+		    <li><a href="@{Tuit.timeline(account.id)}">@${account.screenName}</a>
 		#{/list}
 	</ul>
 #{/if}
