@@ -7,15 +7,19 @@ import play.data.validation.Required;
 import play.db.jpa.Model;
 
 @Entity
-public class User extends Model {
+public class Account extends Model {
 
-	public User(String screenName, String token, String tokenSecret) {
+	public Account(Long userId, String screenName, String token, String tokenSecret) {
 		super();
 
+		this.userId = userId;
 		this.screenName = screenName;
 		this.token = token;
 		this.tokenSecret = tokenSecret;
 	}
+
+	@Required
+	public Long userId;
 
 	@Required
 	public String screenName;

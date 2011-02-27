@@ -2,7 +2,8 @@ package controllers;
 
 import java.util.List;
 
-import models.User;
+import models.Account;
+import models.UserDB;
 import play.Logger;
 import play.Play;
 import play.data.validation.Required;
@@ -12,56 +13,56 @@ import play.mvc.Controller;
 import play.mvc.Router;
 import play.mvc.results.Redirect;
 import services.TwitterConnect;
+import services.UserService;
 import twitter4j.DirectMessage;
+import twitter4j.IDs;
 import twitter4j.Paging;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.http.AccessToken;
 import twitter4j.http.RequestToken;
 
 public class Tuit extends Controller {
-	
+
 	private static boolean signedin;
-	
-	@Before(unless={"callback", "signin"})
+
+	@Before(unless = { "callback", "signin" })
 	public static void addToView() {
 		renderArgs.put("signedin", signedin);
 	}
-	
-	@Before(unless={"index", "callback", "signin"})
+
+	@Before(unless = { "index", "callback", "signin" })
 	public static void checkSessionAndRedirect() {
-		if(!signedin) {
+		if (!signedin) {
 			redirect("Tuit.index");
 		}
 	}
-	
-	public static void index() { 	
-		
-		if(session.get("userId") != null) {
-			List users = User.findAll();
-			User user = User.findById(Long.parseLong(session.get("userId")));
-			Long userId = user.id;
-			String screenName = user.screenName;
-			
-			render(userId, screenName, users);
+
+	public static void index() {
+
+		if (session.get("accountId") != null) {
+			List accounts = Account.findAll();
+			Account account = Account.findById(Long.parseLong(session.get("accountId")));
+			Long accountId = account.id;
+			String screenName = account.screenName;
+
+			render(accountId, screenName, accounts);
 		} else {
 			render();
 		}
 	}
 
 	public static void postDM(Long id, String screenName, String text) {
-		
-		User user = User.findById(id);
-		
-		if(user == null) {
+		Account account = Account.findById(id);
+		if (account == null)
 			error("User.id not found: " + id);
-		}
-		
-		Twitter twitter = TwitterConnect.factory(user);
+
+		Twitter twitter = TwitterConnect.factory(account);
 
 		try {
 			DirectMessage sendDirectMessage = twitter.sendDirectMessage(screenName, text);
@@ -75,25 +76,61 @@ public class Tuit extends Controller {
 	}
 
 	public static void timeline(Long id) {
-		
-		Long userId = id;
-		User user = User.findById(id);
-		String screenName = user.screenName;
-		
-		if(user == null) {
-			error("User.id not found: " + id);
-		}
-			
-		Twitter twitter = TwitterConnect.factory(user);
+
+		Account account = Account.findById(id);
+		if (account == null)
+			error("access.id not found: " + id);
+
+		Twitter twitter = TwitterConnect.factory(account);
 
 		try {
-			// return max allowed from Twitter
+			UserDB me = UserService.find(account.userId);
+			if (null == me) {
+				User user = twitter.showUser(account.screenName);
+				me = UserService.findOrCreate(user);
+			}
+
 			Paging paging = new Paging(1, 100);
-
-			ResponseList<Status> timeline = twitter.getUserTimeline(paging);
 			ResponseList<Status> mentions = twitter.getMentions(paging);
+			ResponseList<Status> timeline = null;
 
-			render(userId, screenName, user, mentions, timeline);
+			for (int i = 0; i < 15; i++) {
+				paging = new Paging(i + 1, 100);
+				timeline = twitter.getHomeTimeline(paging);
+
+				if (timeline.size() == 0)
+					break;
+
+				// I'm following these users
+				for (Status status : timeline) {
+					User follower = status.getUser();
+					UserDB follow2 = UserService.setFollowing(me, follower);
+					
+					
+					// Reads followers information on each client.
+					// TODO: Save list of UserId and lookup later
+
+					// IDs followersIDs =
+					// twitter.getFollowersIDs(follower.getId());
+					// ResponseList<User> ff =
+					// twitter.lookupUsers(followersIDs.getIDs());
+					// for (User f : ff) {
+					// UserService.setFollowing(follow2, f);
+					// }
+
+				}
+			}
+
+			// I can't establish relationship yet.
+			// just save user information
+			//
+			for (Status status : mentions) {
+				User user = status.getUser();
+				UserService.findOrCreate(user);
+			}
+
+			renderArgs.put("screenName", account.screenName);
+			render(mentions, timeline);
 
 		} catch (TwitterException e) {
 			Logger.error(e, e.toString(), "");
@@ -108,7 +145,7 @@ public class Tuit extends Controller {
 
 			session.put("requestToken_token", requestToken.getToken());
 			session.put("requestToken_secret", requestToken.getTokenSecret());
-			
+
 			redirect(requestToken.getAuthenticationURL());
 
 		} catch (TwitterException e) {
@@ -117,7 +154,7 @@ public class Tuit extends Controller {
 
 		}
 	}
-	
+
 	public static void signout() {
 		signedin = false;
 		session.clear();
@@ -126,35 +163,33 @@ public class Tuit extends Controller {
 
 	public static void callback(String oauth_token, String oauth_verifier) {
 		Long id = -1L;
-		
+
 		try {
 			Twitter twitter = TwitterConnect.factory();
-			
-			AccessToken accessToken = twitter.getOAuthAccessToken(
-				session.get("requestToken_token"), 
-				session.get("requestToken_secret"), 
-				oauth_verifier
-			);
+
+			AccessToken accessToken = twitter.getOAuthAccessToken(session.get("requestToken_token"), session.get("requestToken_secret"),
+				oauth_verifier);
 
 			String screenName = accessToken.getScreenName();
-			
-			User existingUser = User.find("byScreenName", screenName).first();
-			
-			if(existingUser == null) {
-				User user = new User(screenName, accessToken.getToken(), accessToken.getTokenSecret());
+
+			Account existingUser = Account.find("byScreenName", screenName).first();
+
+			if (existingUser == null) {
+				Account user = new Account(new Long(accessToken.getUserId()), screenName, accessToken.getToken(), accessToken
+					.getTokenSecret());
 				user.save();
 				id = user.id;
 			} else {
 				id = existingUser.id;
 			}
-			
+
 			signedin = true;
 			session.put("userId", id);
 
 		} catch (TwitterException e) {
 			Logger.error(e, "");
 		}
-		
+
 		redirect("Tuit.index");
 	}
 }
