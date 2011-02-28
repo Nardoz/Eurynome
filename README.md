@@ -1,6 +1,6 @@
 # Play! Twitter Connector
 
-PlayFramework sample that connects to an Application on Twitter and allows to tweet on behalf of the user, similar what you can do with TweetDeck
+PlayFramework sample that connects to an Application on Twitter and allows to tweet on behalf of the user, similar to what you can do with TweetDeck
 
 ## Prerequisites
 
@@ -33,6 +33,6 @@ You will be able to:
 
 ## Notes
 
-* These are my firsts steps on building app with Play! and Twitter, so don't expect any usable code for final/production app,  in fact it is more like a sandbox.
-* You can check with User Id have been authorized through URL: [http://localhost:9000/admin/Users](http://localhost:9000/admin/Users)
+* These are my firsts steps on building app with Play! and Twitter, so don't expect any usable code for final/production app, in fact it is more like a sandbox.
+* You can check witch User Id has been authorized through URL: [http://localhost:9000/admin/Users](http://localhost:9000/admin/Users)
 * This app should be ported to a Play! Module, I'm still learning how to do this, that's why this is an APP instead of a Module
