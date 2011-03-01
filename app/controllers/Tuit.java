@@ -29,7 +29,12 @@ import twitter4j.http.RequestToken;
 
 public class Tuit extends Controller {
 
-	private static boolean signedin;
+	private static Boolean signedin = false;
+	
+	@Before
+	public static void setSessionStatus() {
+		signedin = Boolean.parseBoolean(session.get("signedin"));
+	}
 
 	@Before(unless = { "callback", "signin" })
 	public static void addToView() {
@@ -59,9 +64,11 @@ public class Tuit extends Controller {
 
 	public static void postDM(Long id, String screenName, String text) {
 		Account account = Account.findById(id);
-		if (account == null)
+		
+		if (account == null) {
 			error("User.id not found: " + id);
-
+		}
+		
 		Twitter twitter = TwitterConnect.factory(account);
 
 		try {
@@ -182,9 +189,10 @@ public class Tuit extends Controller {
 			} else {
 				id = existingUser.id;
 			}
-
+			
 			signedin = true;
-			session.put("userId", id);
+			session.put("signedin", true);
+			session.put("accountId", id);
 
 		} catch (TwitterException e) {
 			Logger.error(e, "");
