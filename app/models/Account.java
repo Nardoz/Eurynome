@@ -1,13 +1,14 @@
 package models;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.UniqueConstraint;
 
 import play.data.validation.Required;
-import play.db.jpa.Model;
+import play.db.jpa.GenericModel;
 
 @Entity
-public class Account extends Model {
+public class Account extends GenericModel {
 
 	public Account(Long userId, String screenName, String token, String tokenSecret) {
 		super();
@@ -18,7 +19,7 @@ public class Account extends Model {
 		this.tokenSecret = tokenSecret;
 	}
 
-	@Required
+	@Id
 	public Long userId;
 
 	@Required
