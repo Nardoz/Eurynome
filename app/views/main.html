@@ -16,7 +16,7 @@
                 <ul id="nav">	                
 	                #{if signedin}
 	                   <li><a href="@{Tuit.index()}">Home</a></li>
-	                   <li><a href="@{Tuit.timeline(session.get("userId"))}">My Timeline</a></li>
+	                   <li><a href="@{Tuit.timeline(session.get("accountId"))}">My Timeline</a></li>
 	                   <li><a href="javascript:;" class="sendDM">Send Direct Message</a></li>
 	                   <li class="signout"><a href="@{Tuit.signout()}">Sign out</a></li>
                     #{/if}
@@ -31,7 +31,7 @@
 	                <p><label for="screenName">To:</label> <input type="text" id="screenName" name="screenName" /></p>
 	                <p><textarea id="text" name="text" rows="4" cols="30"></textarea></p>    
 	                <p><input type="submit" value="DM it!" /> or <a href="javascript:;" class="sendDM">Cancel</a></p>
-	                <input type="hidden" name="id" value="${userId}" />
+	                <input type="hidden" name="id" value="${accountId}" />
 	            #{/form}
 	        </div>          
             #{doLayout /}
