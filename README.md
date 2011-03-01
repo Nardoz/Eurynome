@@ -1,6 +1,6 @@
 # Play! Twitter Connector
 
-PlayFramework sample that connects to an Application on Twitter and allows to tweet on behalf of the user, similar what you can do with TweetDeck
+PlayFramework sample that connects to an Application on Twitter and allows to tweet on behalf of the user, similar to what you can do with TweetDeck
 
 ## Prerequisites
 
