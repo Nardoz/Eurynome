@@ -53,7 +53,7 @@ public class Tuit extends Controller {
 		if (session.get("accountId") != null) {
 			List accounts = Account.findAll();
 			Account account = Account.findById(Long.parseLong(session.get("accountId")));
-			Long accountId = account.id;
+			Long accountId = account.userId;
 			String screenName = account.screenName;
 
 			render(accountId, screenName, accounts);
@@ -185,9 +185,9 @@ public class Tuit extends Controller {
 				Account user = new Account(new Long(accessToken.getUserId()), screenName, accessToken.getToken(), accessToken
 					.getTokenSecret());
 				user.save();
-				id = user.id;
+				id = user.userId;
 			} else {
-				id = existingUser.id;
+				id = existingUser.userId;
 			}
 			
 			signedin = true;
