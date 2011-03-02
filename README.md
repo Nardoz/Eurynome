@@ -5,7 +5,7 @@ PlayFramework sample that connects to an Application on Twitter and allows to tw
 ## Prerequisites
 
 Before you can use Twitter authentication, you have to [register your application](http://developer.twitter.com/apps/new).
-Make sure to create an account that can Read and Write.
+Make sure you set the application type to Browser and Default Access Type to Read and Write.
 Once you register your application, get the *Consumer key* and *Consumer secret*.
 
 Copy conf/application.conf.template to conf/application.conf:
