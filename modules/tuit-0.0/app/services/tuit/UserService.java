@@ -1,6 +1,6 @@
-package services;
+package services.tuit;
 
-import models.UserDB;
+import models.tuit.TuitUser;
 import twitter4j.User;
 
 public class UserService {
@@ -10,8 +10,8 @@ public class UserService {
 	// this.user = user;
 	// }
 
-	public static UserDB setFollowing(UserDB dao, User user) {
-		UserDB f = findOrCreate(user);
+	public static TuitUser setFollowing(TuitUser dao, User user) {
+		TuitUser f = findOrCreate(user);
 
 		dao.follows.add(f);
 		dao.save();
@@ -19,23 +19,23 @@ public class UserService {
 		return f;
 	}
 
-	public static UserDB find(String screenName) {
-		UserDB dao = UserDB.find("screenName = ?", screenName).first();
+	public static TuitUser find(String screenName) {
+		TuitUser dao = TuitUser.find("screenName = ?", screenName).first();
 		return dao;
 
 		// throw new UserServiceException("User not found");
 	}
 
-	public static UserDB find(Long id) {
-		UserDB dao = UserDB.find("userId = ?", id).first();
+	public static TuitUser find(Long id) {
+		TuitUser dao = TuitUser.find("userId = ?", id).first();
 		return dao;
 	}
 
-	public static UserDB findOrCreate(User user) {
-		UserDB dao = UserDB.find("userId = ?", new Long(user.getId())).first();
+	public static TuitUser findOrCreate(User user) {
+		TuitUser dao = TuitUser.find("userId = ?", new Long(user.getId())).first();
 
 		if (null == dao) {
-			dao = new UserDB();
+			dao = new TuitUser();
 
 			// UserId from Twitter
 			dao.userId = user.getId();
@@ -72,7 +72,7 @@ public class UserService {
 			dao.utcOffset = user.getUtcOffset();
 			// dao.rateLimitStatus = user.getRateLimitStatus();
 
-			dao.save();
+			dao.create();
 		}
 
 		return dao;

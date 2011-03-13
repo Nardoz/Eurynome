@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
     <head>
         <title>#{get 'title' /}</title>
@@ -7,34 +8,9 @@
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
         <script src="@{'/public/javascripts/jquery-1.4.2.min.js'}" type="text/javascript" charset="utf-8"></script>
-        <script src="@{'/public/javascripts/functions.js'}" type="text/javascript" charset="utf-8"></script>
         #{get 'moreScripts' /}
     </head>
     <body>
-        <div id="container">        
-            <div id="header">
-                <ul id="nav">	                
-	                #{if signedin}
-	                   <li><a href="@{Tuit.index()}">Home</a></li>
-	                   <li><a href="@{Tuit.timeline(session.get("accountId"))}">My Timeline</a></li>
-	                   <li><a href="javascript:;" class="sendDM">Send Direct Message</a></li>
-	                   <li class="signout"><a href="@{Tuit.signout()}">Sign out</a></li>
-                    #{/if}
-                    #{else}
-                       <li class="signin"><a href="@{Tuit.signin()}"><img src="http://si0.twimg.com/images/dev/buttons/sign-in-with-twitter-l.png" alt="" /></a></li>
-                    #{/else}
-	            </ul>
-            </div>  
-            <div id="dm">
-	            #{form @Tuit.postDM()}
-	                <p>From: <strong>${screenName}</strong></p>
-	                <p><label for="screenName">To:</label> <input type="text" id="screenName" name="screenName" /></p>
-	                <p><textarea id="text" name="text" rows="4" cols="30"></textarea></p>    
-	                <p><input type="submit" value="DM it!" /> or <a href="javascript:;" class="sendDM">Cancel</a></p>
-	                <input type="hidden" name="id" value="${accountId}" />
-	            #{/form}
-	        </div>          
-            #{doLayout /}
-        </div>       
+        #{doLayout /}
     </body>
 </html>

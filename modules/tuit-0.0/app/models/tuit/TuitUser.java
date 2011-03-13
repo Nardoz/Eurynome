@@ -1,4 +1,4 @@
-package models;
+package models.tuit;
 
 import java.net.URL;
 import java.util.Date;
@@ -14,11 +14,11 @@ import play.data.validation.Required;
 import play.db.jpa.Model;
 
 @Entity
-public class UserDB extends Model {
-	public UserDB() {
+public class TuitUser extends Model {
+	public TuitUser() {
 		super();
 
-		this.follows = new HashSet<UserDB>();
+		this.follows = new HashSet<TuitUser>();
 	}
 
 //	@Id
@@ -58,7 +58,7 @@ public class UserDB extends Model {
 	// public RateLimitStatus rateLimitStatus;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	public Set<UserDB> follows;
+	public Set<TuitUser> follows;
 
 	@Override
 	public String toString() {
