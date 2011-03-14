@@ -35,4 +35,6 @@ public class TuitAccount extends GenericModel {
 	public String toString() {
 		return this.screenName;
 	}
+	
+	public boolean timelineProcessed = false;
 }
