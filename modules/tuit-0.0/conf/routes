@@ -6,6 +6,7 @@
 # ~~~~
 
 # GET     /?                      Module.index
+WS      /                       tuit.TuitController.TimelineSocket.index
 GET     /	                    tuit.TuitController.index
 GET     /?                      tuit.TuitController.index
 GET     /postDM                 tuit.TuitController.postDM
