@@ -2,6 +2,7 @@ package controllers.tuit;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import jobs.tuit.UserTimelineJob;
@@ -11,8 +12,15 @@ import models.tuit.TuitUser;
 import play.Logger;
 import play.mvc.Before;
 import play.mvc.Controller;
+import play.mvc.Http.WebSocketEvent;
+import play.mvc.Http.WebSocketFrame;
 import play.mvc.Router;
 import play.mvc.WebSocketController;
+import play.jobs.JobsPlugin;
+import play.libs.*;
+import play.libs.F.*;
+import static play.libs.F.*;
+import static play.libs.F.Matcher.*;
 import services.tuit.TuitService;
 import services.tuit.UserService;
 import twitter4j.DirectMessage;
@@ -84,17 +92,47 @@ public class TuitController extends Controller {
 		}
 	}
 	
-	public static void timeline() {
-		render();
+	public static void timeline(Long id) {
+		TuitUser me = UserService.find(id);
+		String screenName = "";
+		Long accountId = id;
+		
+		if(me != null) {
+			screenName = me.screenName;	
+		} 
+		
+		render(screenName, accountId);
 	}
 	
 	public static class TimelineSocket extends WebSocketController {
 		
-		public static void getTimeline(Long id) {
-			Future<InputStream> user = new UserTimelineJob(id).now();
+		public static void index() {
+			Long id = null;
+			JobsPlugin job = new JobsPlugin();
 			
-			while(inbound.isOpen()) {				
-		        outbound.sendJson(await(user));	
+			while(inbound.isOpen()) {
+				WebSocketEvent e = await(inbound.nextEvent());
+								
+				for(String uid: e.TextFrame.match(e)) {
+					id = Long.parseLong(uid);
+					
+					// START FIXME
+					if(id != null) {
+						if(request.isNew) {
+					        Future<InputStream> task = new UserTimelineJob(id).now();
+					        request.args.put("task", task);
+					        await(task);				        
+					        
+					        try {
+								outbound.sendJson(((Future<InputStream>) request.args.get("task")).get());
+							} 
+					        catch (Exception ee) { } 
+					    }
+					}				
+					// END FIXME
+			        
+			        System.out.print(job.getStatus());
+                }	
 			}
 		}
 	}
@@ -112,7 +150,6 @@ public class TuitController extends Controller {
 		} catch (TwitterException e) {
 			Logger.error(e, e.toString(), "");
 			error(e.getMessage());
-
 		}
 	}
 
