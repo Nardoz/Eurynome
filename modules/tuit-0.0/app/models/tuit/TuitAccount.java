@@ -1,4 +1,4 @@
-package models;
+package models.tuit;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -8,9 +8,9 @@ import play.data.validation.Required;
 import play.db.jpa.GenericModel;
 
 @Entity
-public class Account extends GenericModel {
+public class TuitAccount extends GenericModel {
 
-	public Account(Long userId, String screenName, String token, String tokenSecret) {
+	public TuitAccount(Long userId, String screenName, String token, String tokenSecret) {
 		super();
 
 		this.userId = userId;

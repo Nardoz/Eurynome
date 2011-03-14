@@ -1,4 +1,4 @@
-package services;
+package services.tuit;
 
 public class UserServiceException extends Exception {
 
