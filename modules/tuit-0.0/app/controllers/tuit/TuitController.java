@@ -1,6 +1,10 @@
 package controllers.tuit;
 
+import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.Future;
+
+import jobs.tuit.UserTimelineJob;
 
 import models.tuit.TuitAccount;
 import models.tuit.TuitUser;
@@ -8,6 +12,7 @@ import play.Logger;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Router;
+import play.mvc.WebSocketController;
 import services.tuit.TuitService;
 import services.tuit.UserService;
 import twitter4j.DirectMessage;
@@ -78,67 +83,19 @@ public class TuitController extends Controller {
 			error(e);
 		}
 	}
-
-	public static void timeline(Long id) {
-
-		TuitAccount account = TuitAccount.findById(id);
-		if (account == null)
-			error("access.id not found: " + id);
-
-		Twitter twitter = TuitService.factory(account);
-
-		try {
-			TuitUser me = UserService.find(account.userId);
-			if (null == me) {
-				User user = twitter.showUser(account.screenName);
-				me = UserService.findOrCreate(user);
+	
+	public static void timeline() {
+		render();
+	}
+	
+	public static class TimelineSocket extends WebSocketController {
+		
+		public static void getTimeline(Long id) {
+			Future<InputStream> user = new UserTimelineJob(id).now();
+			
+			while(inbound.isOpen()) {				
+		        outbound.sendJson(await(user));	
 			}
-
-			Paging paging = new Paging(1, 100);
-			ResponseList<Status> mentions = twitter.getMentions(paging);
-			ResponseList<Status> timeline = null;
-
-			for (int i = 0; i < 15; i++) {
-				paging = new Paging(i + 1, 100);
-				timeline = twitter.getHomeTimeline(paging);
-
-				if (timeline.size() == 0)
-					break;
-
-				// I'm following these users
-				for (Status status : timeline) {
-					User follower = status.getUser();
-					TuitUser follow2 = UserService.setFollowing(me, follower);
-					
-					// Reads followers information on each client.
-					// TODO: Save list of UserId and lookup later
-
-					// IDs followersIDs =
-					// twitter.getFollowersIDs(follower.getId());
-					// ResponseList<User> ff =
-					// twitter.lookupUsers(followersIDs.getIDs());
-					// for (User f : ff) {
-					// UserService.setFollowing(follow2, f);
-					// }
-
-				}
-			}
-
-			// I can't establish relationship yet.
-			// just save user information
-			//
-			for (Status status : mentions) {
-				User user = status.getUser();
-				UserService.findOrCreate(user);
-			}
-
-			renderArgs.put("accountId", account.userId);
-			renderArgs.put("screenName", account.screenName);
-			render(mentions, timeline);
-
-		} catch (TwitterException e) {
-			Logger.error(e, e.toString(), "");
-			error(e.getMessage());
 		}
 	}
 
