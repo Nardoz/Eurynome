@@ -5,7 +5,7 @@
     <h2>User List</h2>
 	<ul id="userList">
 		#{list items:accounts, as:'account'}
-		    <li><a href="@{tuit.TuitController.timeline(account.userId)}">@${account.screenName}</a>
+		    <li><a href="@{tuit.TuitController.timeline(account.userId)}">@${account.screenName}</a></li>
 		#{/list}
 	</ul>
 #{/if}
