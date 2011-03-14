@@ -2,31 +2,30 @@
 #{set title:'Timeline' /}
 
 <h1>${screenName}'s Timeline</h1>
+<ul id="userList"></ul>
 
-<div class="tweets">
-    <h3>My Tweets</h3>
-    <ul>	    
-	    #{list items:timeline, as:'tweet' }
-		    <li class="${tweet_parity}">
-				<span class="tweet">${tweet.getText()}</span>
-				<span class="date">${tweet.getCreatedAt().format('HH:mm dd/MM/yyyy')}</span>  
-		    </li>
-	    #{/list}
-    </ul>
-</div>
+<script>
+var socket = new WebSocket("ws://localhost:8080"); 
 
-<div class="tweets">
-    <h3>Mentions</h3>
-    <ul>
-        #{list items:mentions, as:'tweet' }
-	        <li class="${tweet_parity}">
-	            <span class="username">${tweet.getUser().getName()} (${tweet.getUser().getScreenName()})</span>
-	            <span class="tweet">${tweet.getText()}</span>
-	            <span class="date">${tweet.getCreatedAt().format('HH:mm dd/MM/yyyy')}</span>  
-	        </li>
-	    #{/list}
-    </ul>
-</div>
+socket.onopen = function() {
+	socket.send(${accountId});
+	console.log("Websocket opened");
+};
 
+socket.onmessage = function(msg) {    
+    $('#userList').append('<li>user</li>');
+    console.log(msg);
+};
 
+/*
+var socket = new io.Socket("http://localhost:8080/getTimeline?id=${accountId}", { rememberTransport: false });
+socket.connect();
+
+socket.on('message', function(obj) {    
+	$('#userList').append('<li>user</li>');
+    console.log(obj);
+});
+*/
+
+</script>
 
