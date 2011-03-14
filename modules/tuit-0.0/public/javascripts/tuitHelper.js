@@ -12,13 +12,6 @@ $(function() {
 			dm.slideDown(400);
 		}
 	});	
-    
-    socket = new io.Socket(null, { port: 8080, rememberTransport: false });
-    socket.connect();
-        
-    socket.on('message', function(obj) {    
-        console.log(obj);
-    });
 });
 
 $(window).resize(function() {
