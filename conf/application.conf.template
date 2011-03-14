@@ -27,6 +27,7 @@ application.secret=d03HD8xx2YmBYV1RkjB4fJQuAL9ObmVlrnTQTTeVH6KUZMjP8r5GfS6xkdynU
 # Import he crud module
 module.crud=${play.path}/modules/crud
 module.tuit=modules/tuit-0.0
+module.docs=modules/docs-0.0
 
 # i18n
 # ~~~~~
