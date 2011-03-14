@@ -1,5 +1,8 @@
 package jobs.tuit;
 
+import java.io.InputStream;
+import java.util.concurrent.Future;
+
 import models.tuit.TuitAccount;
 import models.tuit.TuitUser;
 import play.Logger;
@@ -21,12 +24,17 @@ public class UserTimelineJob extends Job {
 		this.id = id;
 	}
 
-	public void doJob() {		
+	public Future<InputStream> doJobWithResult() {		
 		TuitAccount account = TuitAccount.findById(id);
 		
 		if(account == null) {
 			Logger.error("access.id not found: " + id);
-			return;
+			return null;
+		}
+		
+		if(account.timelineProcessed) {
+			Logger.error("already processed");
+			return null;
 		}
 		
 		Twitter twitter = TuitService.factory(account);
@@ -48,7 +56,7 @@ public class UserTimelineJob extends Job {
 
 				if (timeline.size() == 0)
 					break;
-
+				
 				// I'm following these users
 				for (Status status : timeline) {
 					User follower = status.getUser();
@@ -75,11 +83,14 @@ public class UserTimelineJob extends Job {
 				User user = status.getUser();
 				UserService.findOrCreate(user);
 			}
-
+			
+			account.timelineProcessed = true;
+			account.save();
 
 		} catch (TwitterException e) {
 			Logger.error(e, e.toString(), "");
 			//error(e.getMessage());
 		}
+		return null;
 	}
 }
