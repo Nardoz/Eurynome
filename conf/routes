@@ -5,7 +5,7 @@
 # Home page
 *       /admin                                  module:crud
 GET     /public/                                staticDir:public
-
+*       /docs                                   module:docs
 *       /		                                module:tuit
 
 # *       /{controller}                           {controller}.index
