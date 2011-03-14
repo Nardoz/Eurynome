@@ -1,0 +1,38 @@
+
+* { margin:0; padding:0 }
+body { background:#F3F3F3; color:#333; font-family:Arial; font-size:62.5% }
+
+a { color:#3B5998 }
+a:hover { text-decoration:none }
+code { color:#000; background:#FFF; padding:5px; margin:10px 0; clear:both; float:left }
+h1 { float:left; font-size:3.5em; font-weight:normal; letter-spacing:-2px }
+h2 { font-size:1.5em; margin:10px }
+h3 { clear:left; float:left; width:940px; font-size:1.7em; margin-bottom:10px; background-color:#FFFFCC; padding:10px }
+p { padding:10px; margin:5px 0 }
+ul { float:left; width:100%; margin:0 0 15px 30px }
+ul li { float:left; clear:left; margin-left:20px }
+
+.left { float:left }
+
+#container { 
+    background:#FFF; 
+    border:1px solid #CCC; 
+    border-width:0 1px; 
+    margin:0 auto; 
+    padding:15px;
+    width:960px 
+}
+
+#header, #content, #footer { clear:left; float:left; width:960px }
+#header { margin-bottom:20px }
+#header p { font-size:1.4em }
+
+#menu { list-style:none; float:right; margin-top:13px; clear:none; width:auto }
+#menu li { float:left; clear:none; font-size:1.6em; margin:0 20px }
+#menu li a { text-decoration:none }
+#menu li a:hover { text-decoration:underline }
+#menu li.selected a { font-weight:bold }
+#menu li.demo a { background-color:#F09413; color:#FFF; padding:5px 10px; -webkit-border-radius:8px; -moz-border-radius:8px; -border-radius:8px; text-shadow:#444 1px 1px 2px; }
+#menu li.demo a:hover { background-color:#f0a613; text-decoration:none }
+
+#content { font-size:1.4em; line-height:1.5em; background-color:#F0F9FF }

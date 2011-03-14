@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Eurynome - #{get 'title' /}</title>
+    <link type="text/css" href="@{'/public/stylesheets/eurynome.css'}" rel="stylesheet" />
+    <link type="image/png" href="@{'/public/images/favicon.png'}" rel="shortcut icon" />
+    <script src="@{'/public/javascripts/jquery-1.5.1.min.js'}"></script>
+    #{get 'moreStyles' /}
+    #{get 'moreScripts' /}
+</head>
+<body>
+<div id="container">
+    <div id="header">
+        <h1>Eurynome</h1>
+        <ul id="menu">
+            <li#{if params.get("page") == null} class="selected"#{/if}><a href="@{docs.Docs.index}">Home</a></li>     
+            <li#{if params.get("page") == "docs"} class="selected"#{/if}><a href="@{docs.Docs.index("docs")}">Docs</a></li>
+            <li#{if params.get("page") == "community"} class="selected"#{/if}><a href="@{docs.Docs.index("community")}">Community</a></li>
+            <li class="demo"><a href="@{docs.Docs.index("download")}">Download now</a></li>
+        </ul>
+    </div>
+    <h3>Eurynome lets you easily extract, process and visualize Twitter info</h3>
+    <div id="content">
+        #{doLayout /}
+    </div>
+</div>
+<script src="@{'/public/javascripts/eurynome.js'}"></script>
+</body>
+</html>
