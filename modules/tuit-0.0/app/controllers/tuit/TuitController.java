@@ -181,8 +181,6 @@ public class TuitController extends Controller {
 				id = existingUser.userId;
 			}
 			
-			asdasdasd
-			
 			signedin = true;
 			session.put("signedin", true);
 			session.put("accountId", id);
