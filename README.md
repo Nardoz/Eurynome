@@ -15,8 +15,8 @@ Copy conf/application.conf.template to conf/application.conf:
 Add to the bottom of the file keys you received from Twitter:
 
 	# Twitter Credentials
-	twitter.consumerKey=XXXXXXXXXXXXXXXXXXXXXXX
-	twitter.consumerSecret=XXXXXXXXXXXXXXXXXXXXXXX
+	tuit.consumerKey=XXXXXXXXXXXXXXXXXXXXXXX
+	tuit.consumerSecret=XXXXXXXXXXXXXXXXXXXXXXX
 	
 ## Usage
 
