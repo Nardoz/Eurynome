@@ -1,0 +1,6 @@
+conf/application.conf
+.classpath
+eclipse
+.settings
+.project
+tmp
