@@ -1,4 +1,4 @@
-package interfaces;
+package interfaces.tuitconnect;
 
 public class TwitterUserDTO {
 	public Long userId;

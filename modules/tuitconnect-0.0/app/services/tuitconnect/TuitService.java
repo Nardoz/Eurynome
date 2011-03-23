@@ -1,4 +1,4 @@
-package services;
+package services.tuitconnect;
 
 import play.Play;
 import play.exceptions.UnexpectedException;

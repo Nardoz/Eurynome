@@ -1,36 +1,31 @@
-package controllers;
+package controllers.tuitconnect;
 
-import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import annotations.TwitterCallback;
+import annotations.tuitconnect.TwitterCallback;
 import groovy.ui.text.FindReplaceUtility;
-import interfaces.TwitterAuthenticationHandler;
-import interfaces.TwitterUserDTO;
+import interfaces.tuitconnect.*;
 import play.Play;
 import play.db.jpa.Model;
 import play.mvc.*;
 import play.utils.Java;
-import services.TuitService;
+import services.tuitconnect.*;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.http.AccessToken;
 import twitter4j.http.RequestToken;
 
-public class TwitterAware extends Controller {
-	protected static String callbackController;
-
+public class TuitConnect extends Controller {
 	@Before(priority=1)
-	static void checkSession() throws TwitterException {
-		if(!session.contains("tuid") && !flash.contains("auth_process")) {
+	static void handleBegin() throws TwitterException {
+		if(!flash.contains("auth_process")) {
 			beginAuth();
 		}
 	}
 	
 	@Before(priority=5)
-	static void setSession() throws TwitterException, Exception {
+	static void handleCallback() throws TwitterException, Exception {
 		if(flash.contains("auth_process")) {
 			String oauth_token = params.get("oauth_token");
 			String oauth_verifier = params.get("oauth_verifier");
@@ -59,14 +54,15 @@ public class TwitterAware extends Controller {
 		String token = accessToken.getToken();
 		String tokenSecret = accessToken.getTokenSecret();
 
-		session.put("tuid", userId); 
-		
-//		List<Method> methods = Java.findAllAnnotatedMethods(request.controllerClass, TwitterCallback.class);
 		List<Class> classes = Play.classloader.getAssignableClasses(TwitterAuthenticationHandler.class);
 		
 		TwitterUserDTO user = new TwitterUserDTO(userId, screenName, token, tokenSecret);
 		
 		TwitterAuthenticationHandler handler = (TwitterAuthenticationHandler)classes.get(0).newInstance();
 		handler.authenticationSuccess(user);
+	}
+	
+	public static void index() {
+		renderText("modulo");
 	}
 }

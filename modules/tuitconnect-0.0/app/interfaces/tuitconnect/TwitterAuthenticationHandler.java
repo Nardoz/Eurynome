@@ -1,4 +1,4 @@
-package interfaces;
+package interfaces.tuitconnect;
 
 public interface TwitterAuthenticationHandler {
 	void authenticationSuccess(TwitterUserDTO user);

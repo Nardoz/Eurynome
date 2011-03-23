@@ -1,4 +1,4 @@
-package annotations;
+package annotations.tuitconnect;
 
 import java.lang.annotation.*;
 
