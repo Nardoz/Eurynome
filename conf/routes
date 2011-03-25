@@ -5,8 +5,9 @@
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
-# Home page
-GET		/connect/twitter						module:tuitconnect
+# Application
+GET		/connect/{platform}							module:socialconnector
+#GET		/connect/twitter						module:tuitconnect
 GET     /                                       Application.index
 
 # Catch all

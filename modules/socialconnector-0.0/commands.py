@@ -1,10 +1,10 @@
 # Here you can create play commands that are specific to the module, and extend existing commands
 
-MODULE = 'tuitconnect'
+MODULE = 'socialconnector'
 
 # Commands that are specific to your module
 
-COMMANDS = ['tuitconnect:hello']
+COMMANDS = ['socialconnector:hello']
 
 def execute(**kargs):
     command = kargs.get("command")
@@ -12,7 +12,7 @@ def execute(**kargs):
     args = kargs.get("args")
     env = kargs.get("env")
 
-    if command == "tuitconnect:hello":
+    if command == "socialconnector:hello":
         print "~ Hello"
 
 

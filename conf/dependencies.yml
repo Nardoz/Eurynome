@@ -3,3 +3,4 @@
 require:
     - play
 	- tuitservice
+	- socialconnector
