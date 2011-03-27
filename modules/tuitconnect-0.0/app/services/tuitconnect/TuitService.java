@@ -1,8 +1,10 @@
 package services.tuitconnect;
 
+import interfaces.tuitconnect.TwitterAccount;
 import play.Play;
 import play.exceptions.UnexpectedException;
 import twitter4j.*;
+import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.http.*;
 import static play.Play.configuration;
 
@@ -11,6 +13,19 @@ public class TuitService {
 	private final static String CONSUMER_KEY = Play.configuration.getProperty("tuit.consumerKey");
 	private final static String CONSUMER_SECRET = Play.configuration.getProperty("tuit.consumerSecret");
 
+	public static Twitter factory(TwitterAccount account) {
+		ConfigurationBuilder conf = new ConfigurationBuilder();
+		conf.setOAuthConsumerKey(CONSUMER_KEY)
+			.setOAuthConsumerSecret(CONSUMER_SECRET)
+			.setOAuthAccessToken(account.token)
+			.setOAuthAccessTokenSecret(account.tokenSecret);
+
+		TwitterFactory factory = new TwitterFactory(conf.build());
+		Twitter twitter = factory.getInstance();
+
+		return twitter;
+	}
+	
 	public static Twitter factory() {
 		Twitter twitter = new TwitterFactory().getInstance();
 		twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);

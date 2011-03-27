@@ -72,10 +72,11 @@ public class TwitterConnector extends Controller implements SocialPlatformConnec
 		Twitter twitter = TuitService.factory();
 		AccessToken accessToken = twitter.getOAuthAccessToken(flash.get(OAUTH_TOKEN), flash.get(OAUTH_SECRET), oauth_verifier);
 
-		TwitterUser user = new TwitterUser(
-				accessToken.getToken(), accessToken.getTokenSecret(), new Long(accessToken.getUserId()), accessToken.getScreenName());
-		
-		callback.handleAuthenticationSuccess(user);
+		TwitterAccount account = new TwitterAccount(
+				Integer.toString(accessToken.getUserId()), accessToken.getToken(), accessToken.getTokenSecret());
+//		user.profile.screenName = accessToken.getScreenName();
+
+		callback.handleAuthenticationSuccess(account);
 	}
 	
 	public static void index() {

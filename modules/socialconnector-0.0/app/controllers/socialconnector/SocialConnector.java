@@ -1,15 +1,15 @@
 package controllers.socialconnector;
 
 import interfaces.tuitconnect.TwitterAuthenticationHandler;
-import interfaces.tuitconnect.TwitterUser;
 
 import java.util.List;
 import play.Play;
 import play.mvc.Controller;
-import socialconnector.SocialAccount;
 import socialconnector.SocialConnectorAuthenticationHandler;
 import socialconnector.SocialPlatformAuthenticationHandler;
 import socialconnector.SocialPlatformConnector;
+import socialconnector.account.SocialAccount;
+import twitter4j.TwitterException;
 
 public class SocialConnector extends Controller implements SocialPlatformAuthenticationHandler {
 	// catch-all. medio heavy estar creando una instancia a partir de una clase enviada por url...?
@@ -30,7 +30,7 @@ public class SocialConnector extends Controller implements SocialPlatformAuthent
 	}
 
 	@Override
-	public void handleAuthenticationSuccess(SocialAccount account) throws InstantiationException, IllegalAccessException {
+	public void handleAuthenticationSuccess(SocialAccount account) throws InstantiationException, IllegalAccessException, IllegalStateException, TwitterException {
 		getHandler().authenticationSuccess(account);
 	}
 
