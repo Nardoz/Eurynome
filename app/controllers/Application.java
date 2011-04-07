@@ -6,6 +6,7 @@ import play.*;
 import play.mvc.*;
 import play.cache.*; 
 import socialconnector.*;
+import twitter4j.TwitterException;
 
 /*
 public class Application extends Controller implements TwitterAuthenticationHandler {
@@ -29,10 +30,10 @@ public class Application extends Controller implements SocialConnectorAuthentica
 	}
 
 	@Override
-	public void authenticationSuccess(SocialAccount account) {
+	public void authenticationSuccess(socialconnector.account.SocialAccount account) throws IllegalStateException, TwitterException {
 		// tengo que saber que tipos de id/campos me pueden venir, hmm... 
-		setSession((Long)account.get("userId"));
-		Cache.set("screenName", account.get("screenName"));
+		setSession(new Long(account.userId));
+		Cache.set("screenName", account.getProfile().screenName);
 		home();
 	}
 	
