@@ -1,7 +1,9 @@
+*.[pyc]
 .classpath
 .project
+.settings
 conf/application.conf
 db/*
-eclipse/*
-tmp/*
+eclipse
 logs/*
+tmp
