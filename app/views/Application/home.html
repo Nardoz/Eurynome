@@ -1,7 +1,12 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-hello, ${screenName}
+Hello, ${profile.screenName}
 <br />
-
+Followers: ${profile.followers}
+<br />
+Location: ${profile.location}
+<br />
+<img src="${profile.pictureUrl}" />
+<br />
 <a href="logout">logout</a>

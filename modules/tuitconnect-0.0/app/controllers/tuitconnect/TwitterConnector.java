@@ -26,7 +26,7 @@ public class TwitterConnector extends Controller implements SocialPlatformConnec
 	private static final String OAUTH_VERIFIER = "oauth_verifier";
 	private static final String OAUTH_SECRET = "oauth_secret";
 	private static final String AUTH_PROCESS = "auth_process";
-		
+
 	// SocialConnector contract
 	@Override
 	public void handleAuthentication(SocialPlatformAuthenticationHandler callback) throws Exception {
@@ -36,31 +36,30 @@ public class TwitterConnector extends Controller implements SocialPlatformConnec
 	// Direct use interceptor
 	@Before
 	static void interceptor() throws Exception {
-		interceptor(
-				(TwitterAuthenticationHandler)Play.classloader.getAssignableClasses(TwitterAuthenticationHandler.class).get(0).newInstance());
+		interceptor((TwitterAuthenticationHandler) Play.classloader.getAssignableClasses(TwitterAuthenticationHandler.class).get(0)
+			.newInstance());
 	}
-	
+
 	// The real deal
 	static void interceptor(SocialPlatformAuthenticationHandler callback) throws Exception {
-		if(inProcess()) {
+		if (inProcess()) {
 			endAuth(params.get(OAUTH_TOKEN), params.get(OAUTH_VERIFIER), callback);
-		}
-		else {
+		} else {
 			beginAuth();
 		}
 	}
-	
+
 	static Boolean inProcess() {
 		return flash.contains(AUTH_PROCESS);
 	}
-	
+
 	static void beginAuth() throws TwitterException {
-		Map<String,Object> args = new HashMap<String,Object>();
+		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("platform", "twitter");
-		
+
 		String callbackUrl = Router.getFullUrl(request.action, args);
 		RequestToken requestToken = TuitService.getRequestToken(callbackUrl);
-		
+
 		flash.put(AUTH_PROCESS, 1);
 		flash.put(OAUTH_TOKEN, requestToken.getToken());
 		flash.put(OAUTH_SECRET, requestToken.getTokenSecret());
@@ -72,13 +71,12 @@ public class TwitterConnector extends Controller implements SocialPlatformConnec
 		Twitter twitter = TuitService.factory();
 		AccessToken accessToken = twitter.getOAuthAccessToken(flash.get(OAUTH_TOKEN), flash.get(OAUTH_SECRET), oauth_verifier);
 
-		TwitterAccount account = new TwitterAccount(
-				Integer.toString(accessToken.getUserId()), accessToken.getToken(), accessToken.getTokenSecret());
-//		user.profile.screenName = accessToken.getScreenName();
+		TwitterAccount account = new TwitterAccount(Integer.toString(accessToken.getUserId()), 
+			accessToken.getToken(), accessToken.getTokenSecret());
 
 		callback.handleAuthenticationSuccess(account);
 	}
-	
+
 	public static void index() {
 	}
 }
