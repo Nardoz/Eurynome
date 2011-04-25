@@ -1,7 +1,5 @@
 package controllers.socialconnector;
 
-import interfaces.tuitconnect.TwitterAuthenticationHandler;
-
 import java.util.List;
 import play.Play;
 import play.mvc.Controller;
