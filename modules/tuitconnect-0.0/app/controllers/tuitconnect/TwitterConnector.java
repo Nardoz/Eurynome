@@ -1,25 +1,21 @@
 package controllers.tuitconnect;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
+import interfaces.tuitconnect.TwitterAccount;
+import interfaces.tuitconnect.TwitterAuthenticationHandler;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import annotations.tuitconnect.TwitterCallback;
-import groovy.ui.text.FindReplaceUtility;
-import interfaces.tuitconnect.*;
 import play.Play;
-import play.db.jpa.Model;
-import play.mvc.*;
-import play.utils.Java;
-import services.tuitconnect.*;
+import play.mvc.Before;
+import play.mvc.Controller;
+import play.mvc.Router;
+import services.tuitconnect.TuitService;
 import socialconnector.SocialPlatformAuthenticationHandler;
 import socialconnector.SocialPlatformConnector;
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.http.AccessToken;
-import twitter4j.http.RequestToken;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 
 public class TwitterConnector extends Controller implements SocialPlatformConnector {
 	private static final String OAUTH_TOKEN = "oauth_token";
@@ -77,10 +73,11 @@ public class TwitterConnector extends Controller implements SocialPlatformConnec
 	}
 
 	static void endAuth(String oauth_token, String oauth_verifier, SocialPlatformAuthenticationHandler callback) throws Exception {
-		Twitter twitter = TuitService.factory();
-		AccessToken accessToken = twitter.getOAuthAccessToken(flash.get(OAUTH_TOKEN), flash.get(OAUTH_SECRET), oauth_verifier);
+		Twitter twitter = TuitService.twitterFactory();
+		RequestToken requestToken = new twitter4j.auth.RequestToken(flash.get(OAUTH_TOKEN), flash.get(OAUTH_SECRET));
+		AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
 
-		TwitterAccount account = new TwitterAccount(Integer.toString(accessToken.getUserId()), 
+		TwitterAccount account = new TwitterAccount(Long.toString(accessToken.getUserId()), 
 			accessToken.getToken(), accessToken.getTokenSecret());
 
 		callback.authenticationSuccess(account);

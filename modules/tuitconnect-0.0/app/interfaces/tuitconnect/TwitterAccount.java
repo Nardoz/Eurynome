@@ -16,7 +16,7 @@ public class TwitterAccount extends SocialAccount<TwitterUserProfile> implements
 
 	@Override
 	public TwitterUserProfile getProfile() throws SocialProfileException {
-		Twitter twitter = TuitService.factory(this);
+		Twitter twitter = TuitService.twitterFactory(this);
 		TwitterUserProfile profile = null;
 		try {
 			User user = twitter.verifyCredentials();

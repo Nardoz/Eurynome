@@ -6,37 +6,46 @@ import play.Play;
 import play.exceptions.UnexpectedException;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
+import twitter4j.TwitterStream;
+import twitter4j.TwitterStreamFactory;
+import twitter4j.auth.RequestToken;
+import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
-import twitter4j.http.RequestToken;
 
 public class TuitService {
 	private final static String CONSUMER_KEY = Play.configuration.getProperty("tuit.consumerKey");
 	private final static String CONSUMER_SECRET = Play.configuration.getProperty("tuit.consumerSecret");
 
-	public static Twitter factory(TwitterAccount account) {
+	private static Configuration getConfiguration(TwitterAccount account) 
+	{
 		ConfigurationBuilder conf = new ConfigurationBuilder();
 		conf.setOAuthConsumerKey(CONSUMER_KEY)
-			.setOAuthConsumerSecret(CONSUMER_SECRET)
-			.setOAuthAccessToken(account.token)
-			.setOAuthAccessTokenSecret(account.tokenSecret);
-
-		TwitterFactory factory = new TwitterFactory(conf.build());
-		Twitter twitter = factory.getInstance();
-
-		return twitter;
+			.setOAuthConsumerSecret(CONSUMER_SECRET);
+		
+		if(account != null) {
+			conf.setOAuthAccessToken(account.token)
+				.setOAuthAccessTokenSecret(account.tokenSecret);
+		}
+		
+		return conf.build();
 	}
 	
-	public static Twitter factory() {
-		Twitter twitter = new TwitterFactory().getInstance();
-		twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
-
-		return twitter;
+	public static Twitter twitterFactory(TwitterAccount account) {
+		TwitterFactory factory = new TwitterFactory(getConfiguration(account));
+		return factory.getInstance();
+	}
+	
+	public static Twitter twitterFactory() {
+		return twitterFactory(null);
+	}
+	
+	public static TwitterStream streamFactory(TwitterAccount account) {
+		TwitterStreamFactory factory = new TwitterStreamFactory(getConfiguration(account));
+		return factory.getInstance();
 	}
 
 	public static RequestToken getRequestToken(String callback) throws Exception {
-		Twitter twitter = factory();
-
-		RequestToken requestToken = twitter.getOAuthRequestToken(callback);
+		RequestToken requestToken = twitterFactory().getOAuthRequestToken(callback);
 		return requestToken;
 	}
 
