@@ -33,14 +33,16 @@ public class TwitterConnector extends Controller implements SocialPlatformConnec
 		interceptor(callback);
 	}
 
-	// Direct use interceptor
+	// This interceptor is activated when using TwitterConnector directly; ignored if behind SocialConnector
 	@Before
 	static void interceptor() throws Exception {
-		interceptor((TwitterAuthenticationHandler) Play.classloader.getAssignableClasses(TwitterAuthenticationHandler.class).get(0)
-			.newInstance());
+		// who is handling my callback?
+		Class handler = Play.classloader.getAssignableClasses(TwitterAuthenticationHandler.class).get(0);
+		
+		interceptor((TwitterAuthenticationHandler)handler.newInstance());
 	}
 
-	// The real deal
+	// The authorization flow interceptor
 	static void interceptor(SocialPlatformAuthenticationHandler callback) throws Exception {
 		if (inProcess()) {
 			endAuth(params.get(OAUTH_TOKEN), params.get(OAUTH_VERIFIER), callback);
@@ -49,11 +51,18 @@ public class TwitterConnector extends Controller implements SocialPlatformConnec
 		}
 	}
 
+	// This action is never called because the interceptor catches the flow always
+	public static void index() {
+	}
+	
 	static Boolean inProcess() {
 		return flash.contains(AUTH_PROCESS);
 	}
 
-	static void beginAuth() throws TwitterException {
+	static void beginAuth() throws Exception {
+		// TODO: the TwitterModule shouldn't know about the implementation of SocialConnector controller
+		// we are adding ?platform=twitter just for the SocialConnector.Index() to get it after Twitter oauth callback
+		// plus if we are using this module directly (without SocialConnector), sending this param makes no sense
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("platform", "twitter");
 
@@ -74,9 +83,6 @@ public class TwitterConnector extends Controller implements SocialPlatformConnec
 		TwitterAccount account = new TwitterAccount(Integer.toString(accessToken.getUserId()), 
 			accessToken.getToken(), accessToken.getTokenSecret());
 
-		callback.handleAuthenticationSuccess(account);
-	}
-
-	public static void index() {
+		callback.authenticationSuccess(account);
 	}
 }

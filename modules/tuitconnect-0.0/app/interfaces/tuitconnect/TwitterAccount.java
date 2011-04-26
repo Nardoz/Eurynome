@@ -1,41 +1,40 @@
 package interfaces.tuitconnect;
 
+import java.io.Serializable;
+
 import services.tuitconnect.TuitService;
 import socialconnector.account.SocialAccount;
-import socialconnector.exceptions.SocialAccountProfileException;
+import socialconnector.exceptions.SocialProfileException;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
-import twitter4j.http.AccessToken;
 
-public class TwitterAccount extends SocialAccount<TwitterUserProfile> {
+public class TwitterAccount extends SocialAccount<TwitterUserProfile> implements Serializable {
 	public TwitterAccount(String userId, String token, String tokenSecret) {
 		super(userId, token, tokenSecret);
 	}
 
 	@Override
-	public TwitterUserProfile getProfile() throws SocialAccountProfileException {
+	public TwitterUserProfile getProfile() throws SocialProfileException {
 		Twitter twitter = TuitService.factory(this);
 		TwitterUserProfile profile = null;
-		User user;
 		try {
-			user = twitter.verifyCredentials();
+			User user = twitter.verifyCredentials();
 			profile = new TwitterUserProfile();
 			profile.url = user.getURL();
-			profile.screenName = user.getScreenName();
-			String[] name = user.getName().split("\\s");
-			profile.firstName = name.length > 0 ? name[0] : null;
-			profile.lastName = name.length > 1 ? name[1] : null;
-			profile.description = user.getDescription();
+			profile.nickname = user.getScreenName();
+			String[] names = user.getName().split("\\s", 2);
+			profile.firstName = names[0];
+			profile.lastName = names.length > 1 ? names[1] : null;
 			profile.followers = user.getFollowersCount();
 			profile.following = user.getFriendsCount();
 			profile.connectionsCount = profile.followers + profile.following;
-			profile.pictureUrl = user.getProfileImageURL();
+			profile.photoUrl = user.getProfileImageURL();
 			profile.location = user.getLocation();
-			profile.language = user.getLang();
+			profile.locale = user.getLang();
 
 		} catch (TwitterException e) {
-			throw new SocialAccountProfileException(e);
+			throw new SocialProfileException(e);
 		}
 
 		return profile;
