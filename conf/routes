@@ -4,16 +4,12 @@
 
 # Home page
 GET     /                                       Application.index
-*       /admin                                  module:crud
-GET     /public/                                staticDir:public
-*       /docs                                   module:docs
-*       /		                                module:tuit
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
 # Application
-GET		/connect/{platform}							module:socialconnector
+GET	/connect/{platform}			module:socialconnector
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
