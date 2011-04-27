@@ -1,19 +1,16 @@
 package socialconnector;
 
-import java.util.Map;
-import play.db.jpa.GenericModel;
+import socialconnector.exceptions.SocialProfileException;
 
-public abstract class SocialAccount extends GenericModel {
-	protected Map<String, Object> data;
+public abstract class SocialAccount<T extends SocialProfile> {
+	public String userId;
 	public String token;
 	public String tokenSecret;
-	
-	public Object get(String fieldName) {
-		return this.data.get(fieldName);
-	}
-	
-	public SocialAccount(Map<String, Object> data, String token, String tokenSecret) {
-		this.data = data;
+
+	public abstract T getProfile() throws SocialProfileException;
+
+	public SocialAccount(String userId, String token, String tokenSecret) {
+		this.userId = userId;
 		this.token = token;
 		this.tokenSecret = tokenSecret;
 	}

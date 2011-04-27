@@ -3,10 +3,10 @@ package controllers.socialconnector;
 import java.util.List;
 import play.Play;
 import play.mvc.Controller;
+import socialconnector.SocialAccount;
 import socialconnector.SocialConnectorAuthenticationHandler;
 import socialconnector.SocialPlatformAuthenticationHandler;
 import socialconnector.SocialPlatformConnector;
-import socialconnector.account.SocialAccount;
 import twitter4j.TwitterException;
 
 public class SocialConnector extends Controller implements SocialPlatformAuthenticationHandler {

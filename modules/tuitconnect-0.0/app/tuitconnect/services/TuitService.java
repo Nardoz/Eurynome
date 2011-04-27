@@ -1,9 +1,9 @@
-package services.tuitconnect;
+package tuitconnect.services;
 
 import static play.Play.configuration;
-import interfaces.tuitconnect.TwitterAccount;
 import play.Play;
 import play.exceptions.UnexpectedException;
+import tuitconnect.TwitterAccount;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;

@@ -1,4 +1,4 @@
-package socialconnector.profile;
+package socialconnector;
 
 import java.net.URL;
 

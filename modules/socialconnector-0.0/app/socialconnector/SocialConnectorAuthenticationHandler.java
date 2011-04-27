@@ -1,6 +1,5 @@
 package socialconnector;
 
-import socialconnector.account.SocialAccount;
 import twitter4j.TwitterException;
 
 public interface SocialConnectorAuthenticationHandler<T extends SocialAccount> {

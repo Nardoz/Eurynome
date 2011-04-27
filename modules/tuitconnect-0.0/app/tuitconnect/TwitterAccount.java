@@ -1,26 +1,27 @@
-package interfaces.tuitconnect;
+package tuitconnect;
 
 import java.io.Serializable;
 
-import services.tuitconnect.TuitService;
-import socialconnector.account.SocialAccount;
+import socialconnector.SocialAccount;
 import socialconnector.exceptions.SocialProfileException;
+import tuitconnect.services.TuitService;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
-public class TwitterAccount extends SocialAccount<TwitterUserProfile> implements Serializable {
+public class TwitterAccount extends SocialAccount<TwitterProfile> implements
+		Serializable {
 	public TwitterAccount(String userId, String token, String tokenSecret) {
 		super(userId, token, tokenSecret);
 	}
 
 	@Override
-	public TwitterUserProfile getProfile() throws SocialProfileException {
+	public TwitterProfile getProfile() throws SocialProfileException {
 		Twitter twitter = TuitService.factory(this);
-		TwitterUserProfile profile = null;
+		TwitterProfile profile = null;
 		try {
 			User user = twitter.verifyCredentials();
-			profile = new TwitterUserProfile();
+			profile = new TwitterProfile();
 			profile.url = user.getURL();
 			profile.nickname = user.getScreenName();
 			String[] names = user.getName().split("\\s", 2);
