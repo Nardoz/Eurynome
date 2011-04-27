@@ -1,19 +1,14 @@
 package controllers;
 
-import interfaces.tuitconnect.TwitterAccount;
-
-import com.mysql.jdbc.log.Log;
-
-import play.*;
-import play.mvc.*;
 import play.cache.Cache;
-import twitter4j.TwitterException;
-
+import play.mvc.Controller;
+import socialconnector.SocialAccount;
 import socialconnector.SocialConnectorAuthenticationHandler;
-import socialconnector.account.SocialAccount;
-import socialconnector.exceptions.SocialAccountProfileException;
+import socialconnector.exceptions.SocialProfileException;
+import tuitconnect.TwitterAccount;
 
-public class Application extends Controller implements SocialConnectorAuthenticationHandler {
+public class Application extends Controller implements
+		SocialConnectorAuthenticationHandler {
 	public static void index() {
 		render();
 	}
@@ -34,7 +29,7 @@ public class Application extends Controller implements SocialConnectorAuthentica
 		error("authenticationFail");
 	}
 
-	public static void home() throws SocialAccountProfileException {
+	public static void home() throws SocialProfileException {
 		String cacheKey = "account-" + session.get("account-userid");
 		TwitterAccount account = (TwitterAccount) Cache.get(cacheKey);
 

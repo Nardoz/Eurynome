@@ -4,20 +4,18 @@ import java.io.Serializable;
 
 import socialconnector.SocialAccount;
 import socialconnector.exceptions.SocialProfileException;
-import tuitconnect.services.TuitService;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
-public class TwitterAccount extends SocialAccount<TwitterProfile> implements
-		Serializable {
-	public TwitterAccount(String userId, String token, String tokenSecret) {
-		super(userId, token, tokenSecret);
+public class TwitterAccount extends SocialAccount<TwitterProfile> implements Serializable {
+	public TwitterAccount(Long userId, String token, String tokenSecret) {
+		super(Long.toString(userId), token, tokenSecret);
 	}
 
 	@Override
 	public TwitterProfile getProfile() throws SocialProfileException {
-		Twitter twitter = TuitService.factory(this);
+		Twitter twitter = TuitService.twitterFactory(this);
 		TwitterProfile profile = null;
 		try {
 			User user = twitter.verifyCredentials();

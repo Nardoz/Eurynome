@@ -1,8 +1,5 @@
 package controllers.tuitconnect;
 
-import interfaces.tuitconnect.TwitterAccount;
-import interfaces.tuitconnect.TwitterAuthenticationHandler;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,15 +9,14 @@ import play.mvc.Controller;
 import play.mvc.Router;
 import socialconnector.SocialPlatformAuthenticationHandler;
 import socialconnector.SocialPlatformConnector;
+import tuitconnect.TuitService;
 import tuitconnect.TwitterAccount;
 import tuitconnect.TwitterAuthenticationHandler;
-import tuitconnect.services.TuitService;
 import twitter4j.Twitter;
-import twitter4j.http.AccessToken;
-import twitter4j.http.RequestToken;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 
-public class TwitterConnector extends Controller implements
-		SocialPlatformConnector {
+public class TwitterConnector extends Controller implements SocialPlatformConnector {
 	private static final String OAUTH_TOKEN = "oauth_token";
 	private static final String OAUTH_VERIFIER = "oauth_verifier";
 	private static final String OAUTH_SECRET = "oauth_secret";
@@ -28,8 +24,7 @@ public class TwitterConnector extends Controller implements
 
 	// SocialConnector contract
 	@Override
-	public void handleAuthentication(
-			SocialPlatformAuthenticationHandler callback) throws Exception {
+	public void handleAuthentication(SocialPlatformAuthenticationHandler callback) throws Exception {
 		interceptor(callback);
 	}
 
@@ -44,8 +39,7 @@ public class TwitterConnector extends Controller implements
 	}
 
 	// The authorization flow interceptor
-	static void interceptor(SocialPlatformAuthenticationHandler callback)
-			throws Exception {
+	static void interceptor(SocialPlatformAuthenticationHandler callback) throws Exception {
 		if (inProcess()) {
 			endAuth(params.get(OAUTH_TOKEN), params.get(OAUTH_VERIFIER),
 					callback);
@@ -85,13 +79,14 @@ public class TwitterConnector extends Controller implements
 
 	static void endAuth(String oauth_token, String oauth_verifier,
 			SocialPlatformAuthenticationHandler callback) throws Exception {
-		Twitter twitter = TuitService.factory();
+		Twitter twitter = TuitService.twitterFactory();
+		
+		RequestToken requestToken = new RequestToken(flash.get(OAUTH_TOKEN), flash.get(OAUTH_SECRET));
 		AccessToken accessToken = twitter
-				.getOAuthAccessToken(flash.get(OAUTH_TOKEN),
-						flash.get(OAUTH_SECRET), oauth_verifier);
+				.getOAuthAccessToken(requestToken, oauth_verifier);
 
 		TwitterAccount account = new TwitterAccount(
-				Integer.toString(accessToken.getUserId()),
+				accessToken.getUserId(),
 				accessToken.getToken(), accessToken.getTokenSecret());
 
 		callback.authenticationSuccess(account);
