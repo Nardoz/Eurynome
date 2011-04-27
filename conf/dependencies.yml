@@ -2,5 +2,4 @@
 
 require:
     - play
-	- tuitservice
-	- socialconnector
+    - org.twitter4j -> twitter4j-stream 2.2.1

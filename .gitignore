@@ -3,7 +3,8 @@
 .project
 .settings
 conf/application.conf
-db/*
+lib
+db
 eclipse
-logs/*
+logs
 tmp

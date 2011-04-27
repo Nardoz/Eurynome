@@ -1,6 +1,6 @@
 # This is the main configuration file for the application.
 # ~~~~~
-application.name=twitter
+application.name=eurynome
 
 # Application mode
 # ~~~~~
@@ -184,5 +184,5 @@ mail.smtp=mock
 %test.mail.smtp=mock
 
 # Tuit module configuration - Twitter Credentials
-tuit.consumerKey=xxxxxxxxxxxxxxxxxxxxx
-tuit.consumerSecret=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+tuit.consumerKey=
+tuit.consumerSecret=
