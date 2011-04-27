@@ -1,4 +1,4 @@
-*.[pyc]
+*.pyc
 .classpath
 .project
 .settings
