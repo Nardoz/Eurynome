@@ -1,5 +1,8 @@
 package controllers.tuitconnect;
 
+import interfaces.tuitconnect.TwitterAccount;
+import interfaces.tuitconnect.TwitterAuthenticationHandler;
+
 import java.util.HashMap;
 import java.util.Map;
 
