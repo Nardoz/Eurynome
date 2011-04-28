@@ -15,18 +15,23 @@ public class TuitService {
 	private final static String CONSUMER_KEY = Play.configuration.getProperty("tuit.consumerKey");
 	private final static String CONSUMER_SECRET = Play.configuration.getProperty("tuit.consumerSecret");
 
-	private static Configuration getConfiguration(TwitterAccount account) 
-	{
+	private static Configuration getConfiguration(String token, String tokenSecret) {
 		ConfigurationBuilder conf = new ConfigurationBuilder();
 		conf.setOAuthConsumerKey(CONSUMER_KEY)
 			.setOAuthConsumerSecret(CONSUMER_SECRET);
 		
-		if(account != null) {
-			conf.setOAuthAccessToken(account.token)
-				.setOAuthAccessTokenSecret(account.tokenSecret);
+		if(token != null && tokenSecret != null) {
+			conf.setOAuthAccessToken(token)
+				.setOAuthAccessTokenSecret(tokenSecret);
 		}
 		
 		return conf.build();
+	}
+	
+	private static Configuration getConfiguration(TwitterAccount account) {
+		String token = account != null ? account.token : null;
+		String tokenSecret = account != null ? account.tokenSecret : null;
+		return getConfiguration(token, tokenSecret);
 	}
 	
 	public static Twitter twitterFactory(TwitterAccount account) {
@@ -36,6 +41,11 @@ public class TuitService {
 	
 	public static Twitter twitterFactory() {
 		return twitterFactory(null);
+	}
+
+	public static TwitterStream streamFactory(String token, String tokenSecret) {
+		TwitterStreamFactory factory = new TwitterStreamFactory(getConfiguration(token, tokenSecret));
+		return factory.getInstance();
 	}
 	
 	public static TwitterStream streamFactory(TwitterAccount account) {
